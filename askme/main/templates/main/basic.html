@@ -1,14 +1,15 @@
+{% load static %}
 
 <!doctype html>
 <html lang="en" class="h-100">
   <head>
     <meta charset="utf-8">
-    <title>Sticky Footer Navbar Template · Bootstrap v5.3</title>
+    <title>{% block title %}{% endblock %}</title> 
 
-    <link href="../static/css/bootstrap.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="{% static 'main/css/bootstrap.css' %}" rel="stylesheet" crossorigin="anonymous">
     
     <!-- Custom styles for this template -->
-    <link href="../static/css/sticky-footer-navbar.css" rel="stylesheet">
+    <link href="{% static 'main/css/sticky-footer-navbar.css' %}" rel="stylesheet">
   </head>
   <body class="d-flex flex-column h-100">
     
@@ -23,10 +24,10 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="{% url 'about' %}">About</a>
           </li>
           <li class="nav-item">
             <a class="nav-link disabled">Disabled</a>
@@ -43,28 +44,8 @@
 
 <!-- Begin page content -->
 <main class="flex-shrink-0">
-  <div class="container">
-    <h1 class="mt-5">Sticky footer with fixed navbar</h1>
-    
-    <div class="row" >
-      <div class="col-9">
-        <div class="question">
-          <div class="row">
-            <div class="col-2">
-              Avatar
-            </div>
-            <div class="col-1">
-              Content
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-      <div class="col-3">Left</div>
-    </div>
-
-  </div>
+    {% block main_content %}
+    {% endblock %}
 </main>
 
 <footer class="footer mt-auto py-3 bg-light">
