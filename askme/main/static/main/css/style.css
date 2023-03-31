@@ -1,0 +1,39 @@
+.question {
+    border: 2px solid black;
+    border-radius: 1rem;
+    height: 15rem;
+    margin: 2rem 2rem 2rem 0rem;
+}
+
+.question > .qcol {
+    height: 100%;
+    padding: 1rem;
+}
+
+.qavatar {
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+    height: 7rem;
+    width: 7rem;
+}
+
+.qavatar>img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.likebuttons {
+    margin-top: 2rem;
+}
+
+.likebuttons > .likebutton {
+    display: inline;
+}
+
+.qpreview{
+    height: 7.5rem;
+    padding-right: 0.5rem;
+    overflow: hidden;
+}
