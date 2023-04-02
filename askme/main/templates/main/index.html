@@ -1,19 +1,15 @@
-{% extends 'main/basic.html' %}
-
-<!-- {% block Title %}
-Main
-{% endblock %} -->
+{% extends 'main/base.html' %}
 
 {% block content %}
 
 <h2 style="display: inline; margin-right: 2rem;">NewQuestions</h2>
 <a href="#">Hot questions</a>
 
-{% include 'main/test.html' %}
-{% include 'main/test.html' %}
-{% include 'main/test.html' %}
+{% include 'main/include/qtempl.html' %}
+{% include 'main/include/qtempl.html' %}
+{% include 'main/include/qtempl.html' %}
 
-<nav aria-label="Пример навигации по страницам">
+<nav>
   <ul class="pagination">
     <li class="page-item">
       <a class="page-link" href="#" aria-label="Предыдущая">
@@ -30,5 +26,11 @@ Main
     </li>
   </ul>
 </nav>
+
+{% endblock %}
+
+{% block usrcard %}
+
+{% include 'main/include/auser.html' %}
 
 {% endblock %}

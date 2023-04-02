@@ -21,4 +21,16 @@ def listing(request):
     return render(request, 'main/taglisting.html')
 
 def ask(request):
-    return render(request, 'main/askPage.html')
+    return render(request, 'main/ask.html')
+
+def settings(request):
+    return render(request, 'main/settings.html')
+
+def signup(request):
+    return render(request, 'main/auth/signup.html')
+
+def login(request):
+    return render(request, 'main/auth/login.html')
+
+def question(request):
+    return render(request, 'main/question.html')

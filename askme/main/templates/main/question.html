@@ -1,0 +1,88 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+<!-- {% block Title %}
+Main
+{% endblock %} -->
+
+{% block content %}
+
+<div class="row">
+    <div class="col-2 qcol">
+        <div class="qavatar">
+            <img src="{% static 'main/img/avatar.png' %}" alt="">
+        </div>
+        <div class="likebuttons">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+            <label class="form-check-label" for="inlineCheckbox1">1</label>
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+            <label class="form-check-label" for="inlineCheckbox2">2</label>
+
+        </div>
+    </div>
+    <div class="col qcol mx-5">
+        <h2>Question</h2>
+        <div style="font-size: larger;">
+            I was wondering if I could create a forum where instead of featuring a user interface, the entire forum
+            is on a terminal.
+            Is it possible to create such (or to just imitate it)?I was wondering if I could create a forum where
+            instead of featuring a user interface, the entire forum is on a terminal.
+            Is it possible to create such (or to just imitate it)?I was wondering if I could create a forum where
+            instead of featuring a user interface, the entire forum is on a terminal.
+            Is it possible to create such (or to just imitate it)?fdgdfg
+        </div>
+
+        <div class="row" style="padding-top: 0.5rem;">
+            <div class="col">
+                <label>Tags:</label>
+                <a href="">tag1</a>
+                <a href="">tag2</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<hr>
+<div class="answers">
+    {% include 'main/include/atempl.html' %}
+    {% include 'main/include/atempl.html' %}
+    {% include 'main/include/atempl.html' %}
+    {% include 'main/include/atempl.html' %}
+</div>
+
+<nav>
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Предыдущая">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Следующая">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<hr>
+
+<div style="margin: 2rem 2rem 2rem 0; height: 15rem;">
+    <textarea class="form-control black_rounded_border" style="resize: none; height: 100%; width: 100%;" maxlength="20000"
+    placeholder="Enter answer here"></textarea>
+</div>
+
+<input class="btn btn-primary" type="button" value="Answer">
+
+{% endblock %}
+
+{% block usrcard %}
+
+{% include 'main/include/nauser.html' %}
+
+{% endblock %}
