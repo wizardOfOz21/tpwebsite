@@ -18,13 +18,13 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-xxl">
         <div class="col">
-          <a class="navbar-brand" href="#" style="font-size: 3rem;">AskMe</a>
+          <a class="navbar-brand" href="{% url 'home' %}" style="font-size: 3rem;">AskMe</a>
         </div>
         <div class="col">
           <div class="container-fluid">
             <form class="d-flex" role="search">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Ask!</button>
+              <a class="btn btn-outline-success" href="{% url 'ask' %}">Ask!</a>
             </form>
           </div>
         </div>

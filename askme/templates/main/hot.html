@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<h2 style="display: inline; margin-right: 2rem;">HotQuestions</h2>
+<a href="{% url 'home' %}">New questions</a>
+
+{% include 'main/include/qblock.html' %}
+
+{% endblock %}
+
+{% block usrcard %}
+
+{% include 'main/include/auser.html' %}
+
+{% endblock %}

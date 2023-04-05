@@ -1,0 +1,24 @@
+<div class="answers">
+    {% for ans in answers %}
+    {% include 'main/include/atempl.html' with a=ans %}
+    {% endfor %}
+</div>
+
+<nav style="margin-top: 1rem;">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Предыдущая">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% for i in answers.paginator.page_range %}
+        <li class="page-item {% if answers.number == i %} active {% endif %} "><a class="page-link"
+                href="?page={{ i }}">{{ i }}</a></li>
+        {% endfor %}
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Следующая">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

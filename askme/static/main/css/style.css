@@ -46,6 +46,7 @@
 .qpreview {
     height: 7.5rem;
     padding-right: 0.5rem;
+    word-wrap: break-word; 
     overflow: hidden;
 }
 
@@ -63,7 +64,6 @@
 }
 
 .answers {
-    height: 40%;
     overflow-x: hidden;
     overflow-y: scroll;
 }

@@ -13,29 +13,26 @@
 
         </div>
     </div>
-    <div class="col qcol">
-        <a href="">
-            <h3>Question</h3>
+    <div class="col-10 qcol">
+        <a href="{% url 'question' q.id %}">
+            <h3>{{ q.title }}</h3>
         </a>
         <div class="qpreview ">
-                I was wondering if I could create a forum where instead of featuring a user interface, the entire forum
-                is on a terminal.
-                Is it possible to create such (or to just imitate it)?I was wondering if I could create a forum where
-                instead of featuring a user interface, the entire forum is on a terminal.
-                Is it possible to create such (or to just imitate it)?I was wondering if I could create a forum where
-                instead of featuring a user interface, the entire forum is on a terminal.
-                Is it possible to create such (or to just imitate it)?fdgdfg
+            {{ q.text }}
         </div>
 
         <div class="row" style="padding-top: 0.5rem;">
             <div class="col">
-                <a href="">answers(...)</a>
+                <a href="{% url 'question' q.id %}">answers({{ q.anum }})</a>
 
             </div>
             <div class="col">
                 <label>Tags:</label>
-                <a href="">tag1</a>
-                <a href="">tag2</a>
+                <span class="tags">
+                    {% for t in q.tags %}
+                    <a href="{% url 'tag' t %}">{{t}}</a>
+                    {% endfor %}
+                </span>
             </div>
         </div>
 
