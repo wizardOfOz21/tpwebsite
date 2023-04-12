@@ -8,7 +8,7 @@
 .answer {
     border: 2px solid black;
     border-radius: 1rem;
-    height: 13rem;
+    height: 15rem;
     margin: 2rem 2rem 2rem 0rem;
 }
 
@@ -38,11 +38,6 @@
     border-radius: 50%;
 }
 
-.likebuttons {
-    text-align: center;
-    margin-top: 2rem;
-}
-
 .qpreview {
     height: 7.5rem;
     padding-right: 0.5rem;
@@ -66,4 +61,69 @@
 .answers {
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+
+.qty .count {
+    color: #000;
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 25px;
+    min-width: 25px;
+    text-align: center;
+}
+
+.qty .plus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: white;
+    width: 25px;
+    height: 25px;
+    font: 25px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    }
+
+.qty .minus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: white;
+    width: 25px;
+    height: 25px;
+    font: 25px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    background-clip: padding-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.qty {
+    text-align: center;
+}
+
+.minus:hover{
+    background-color: #717fe0 !important;
+}
+
+.plus:hover{
+    background-color: #717fe0 !important;
+}
+
+/*Prevent text selection*/
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input:disabled{
+    background-color:white;
 }

@@ -1,61 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator
-import random
-import string
-
-def generate_random_string(length):
-    letters = string.ascii_lowercase
-    rand_string = ''.join(random.choice(letters) for i in range(length))
-    return rand_string
-
-
-class Question:
-    def __init__(self, title, text, anum, id, tags):
-        self.title = title
-        self.text = text
-        self.anum = anum
-        self.id = id
-        self.tags = tags
-
-def get_some_questions(num):
-    questions = []
-    for i in range(1, num):
-        questions.append(Question(
-            'Question#' + str(i),
-            generate_random_string(random.randint(100,2000)),
-            i,
-            i,
-            [generate_random_string(3), generate_random_string(2), generate_random_string(1)],
-        ))
-    return questions
-
-class FakeDataBase:
-    def __init__(self, num):
-        self.data = get_some_questions(num)
-
-    def get_question(self,id):
-        return self.data[id]
-    
-    def get_all(self):
-        return self.data
-    
-    def get_by_tag(self, tag):
-        tlist = []
-        for el in self.data:
-            for t in el.tags:
-                if t == tag:
-                    tlist.append(el)
-                    break
-        return tlist
-    
-    def get_by_rating(self, num):
-        rtop = []
-        while len(rtop) < num:
-            rtop.append(self.data[random.randint(0, len(self.data))])
-        return rtop
-
-db = FakeDataBase(70)
+from .models import Profile, Question, Answer, Tag, Like
 
 def paginate(objects_list, request, per_page=10):
     paginator = Paginator(objects_list, per_page)
@@ -65,40 +11,73 @@ def paginate(objects_list, request, per_page=10):
 
 
 def index(request):
-    questions = db.get_all()
-    
+    questions = Question.get_new_questions()
+
     page_objects = paginate(questions, request, 6)
-    return render(request, 'main/index.html', {'questions': page_objects})
+
+    context = {
+        'questions': page_objects,
+        'hot_tags': Tag.objects.get_popular()[:10],
+        'best_members': Profile.objects.get_popular()[:10],
+    }
+    return render(request, 'main/index.html', context)
+
 
 def hot(request):
-    questions = db.get_by_rating(10)
-    
+    questions = Question.get_popular_questions()
+
     page_objects = paginate(questions, request, 6)
-    return render(request, 'main/hot.html', {'questions': page_objects})
+
+    context = {
+        'questions': page_objects,
+        'hot_tags': Tag.objects.get_popular()[:10],
+        'best_members': Profile.objects.get_popular()[:10],
+    }
+
+    return render(request, 'main/hot.html', context)
 
 
 def tag(request, tname):
-    questions = db.get_by_tag(tname)
+    questions = Question.objects.get_by_tag(tag_name=tname)
 
     page_objects = paginate(questions, request, 6)
-    return render(request, 'main/tag.html', {'questions': page_objects, 'tname': tname})
+
+    context = {
+        'questions': page_objects,
+        'tname': tname,
+        'hot_tags': Tag.objects.get_popular()[:10],
+        'best_members': Profile.objects.get_popular()[:10],
+    }
+
+    return render(request, 'main/tag.html', context)
+
 
 def question(request, qid):
-    q = db.get_question(int(qid)-1)
+    q = Question.objects.get_by_id(question_id=qid)
 
-    answers = paginate(get_some_questions(10), request, 3)
+    answers = paginate(Answer.objects.get_by_qid(question_id=qid), request, 3)
 
-    return render(request, 'main/question.html', {'question': q, 'answers': answers})
+    context = {
+        'question': q,
+        'answers': answers,
+        'hot_tags': Tag.objects.get_popular()[:10],
+        'best_members': Profile.objects.get_popular()[:10],
+    }
+
+    return render(request, 'main/question.html', context)
 
 
 def ask(request):
     return render(request, 'main/ask.html')
 
+
 def settings(request):
     return render(request, 'main/settings.html')
 
+
 def signup(request):
     return render(request, 'main/auth/signup.html')
+
 
 def login(request):
     return render(request, 'main/auth/login.html')
