@@ -1,0 +1,7 @@
+<div class="questions">
+    {% for qt in questions %}
+    {% include 'main/include/qtempl.html' with q=qt %}
+    {% endfor %}
+</div>
+
+{% include 'main/include/paginator.html' with objects=questions %}

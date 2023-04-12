@@ -17,3 +17,5 @@
 - [Домашнее задание 5](files/markdown/task-5.md)
 - [Домашнее задание 6](files/markdown/task-6.md)
 - [Домашнее задание 7](files/markdown/task-7.md)
+
+[Записи занятий](https://cloud.mail.ru/public/Qif7/S4akiSkyU)

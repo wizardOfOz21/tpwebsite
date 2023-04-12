@@ -1,0 +1,40 @@
+{% load static %}
+
+<div class="question row">
+    <div class="col-2 qcol">
+        <div class="qavatar">
+            <img src="{% static 'main/img/avatar.png' %}" alt="">
+        </div>
+        <div class="likebuttons">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                <label class="form-check-label" for="inlineCheckbox1">1</label>
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                <label class="form-check-label" for="inlineCheckbox2">2</label>
+
+        </div>
+    </div>
+    <div class="col-10 qcol">
+        <a href="{% url 'question' q.id %}">
+            <h3>{{ q.title }}</h3>
+        </a>
+        <div class="qpreview ">
+            {{ q.text }}
+        </div>
+
+        <div class="row" style="padding-top: 0.5rem;">
+            <div class="col">
+                <a href="{% url 'question' q.id %}">answers({{ q.anum }})</a>
+
+            </div>
+            <div class="col">
+                <label>Tags:</label>
+                <span class="tags">
+                    {% for t in q.tags %}
+                    <a href="{% url 'tag' t %}">{{t}}</a>
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>

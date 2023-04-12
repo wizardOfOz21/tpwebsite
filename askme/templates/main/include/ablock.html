@@ -1,0 +1,7 @@
+<div class="answers">
+    {% for ans in answers %}
+    {% include 'main/include/atempl.html' with a=ans %}
+    {% endfor %}
+</div>
+
+{% include 'main/include/paginator.html' with objects=answers %}

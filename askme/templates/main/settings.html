@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<h2>Settings: Your Name</h2>
+
+<form action="">
+
+    <div class="row input-group mb-3 pt-4">
+        <div class="col-2 text-left">
+            <span style="font-size: larger;">Login</span>
+        </div>
+        <div class="col-5">
+            <input type="text" class="form-control black_rounded_border" maxlength="50" placeholder="mylogin">
+        </div>
+    </div>
+
+    <div class="row input-group mb-3 pt-2">
+        <div class="col-2 text-left">
+            <span style="font-size: larger;">Email</span>
+        </div>
+        <div class="col-5">
+            <input type="text" class="form-control black_rounded_border" maxlength="100"
+                placeholder="myemail@gmail.com">
+        </div>
+    </div>
+
+    <div class="row input-group mb-3 pt-2">
+        <div class="col-2 text-left">
+            <span style="font-size: larger;">NickName</span>
+        </div>
+        <div class="col-5">
+            <input type="text" class="form-control black_rounded_border" maxlength="25" placeholder="myCoolName">
+        </div>
+    </div>
+
+    <div class="row input-group mb-3 pt-2">
+        <div class="col-2 text-left">
+            <span style="font-size: larger;">Upload avatar</span>
+        </div>
+        <div class="col-5">
+            <img class="black_rounded_border mb-2" style="height: 8rem; display: block;"
+                src="{% static 'main/img/avatar.png' %}">
+            <input type="file" id="file">
+        </div>
+    </div>
+
+    <div class="row input-group mb-3 pt-2">
+        <div class="col-2 text-left">
+        </div>
+        <div class="col-5">
+            <input class="btn btn-primary" type="button" value="Save">
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}
+
+{% block usrcard %}
+
+{% include 'main/include/auser.html' %}
+
+{% endblock %}

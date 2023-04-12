@@ -1,0 +1,54 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<h2 style="display: inline; margin-right: 2rem;">New Question</h2>
+
+<form action="">
+
+    <div class="row input-group mb-3 pt-5">
+        <div class="col-2 text-left">
+            <span style="font-size: larger;">Title</span>
+        </div>
+        <div class="col-8">
+            <input type="text" class="form-control black_rounded_border" maxlength="150"
+                placeholder="Enter question title">
+        </div>
+    </div>
+
+    <div class="row input-group mb-3 pt-2">
+        <div class="col-2 text-left">
+            <span style="font-size: larger;">Text</span>
+        </div>
+        <div class="col-8">
+            <textarea class="form-control black_rounded_border" style="resize: none; height: 20rem;" maxlength="20000"
+                placeholder="Enter question text"></textarea>
+        </div>
+    </div>
+
+    <div class="row input-group mb-3 pt-2">
+        <div class="col-2 text-left">
+            <span style="font-size: larger;">Tags</span>
+        </div>
+        <div class="col-8">
+            <input type="text" class="form-control black_rounded_border" maxlength="150" placeholder="Enter some tags">
+            <label class="my-2" style="color: red;">Wrong tags</label>
+        </div>
+    </div>
+
+    <div class="row input-group mb-3 pt-2">
+        <div class="col-2 text-left">
+        </div>
+        <div class="col-8">
+            <input class="btn btn-primary" type="button" value="Ask">
+        </div>
+    </div>
+
+</form>
+{% endblock %}
+
+{% block usrcard %}
+
+{% include 'main/include/nauser.html' %}
+
+{% endblock %}

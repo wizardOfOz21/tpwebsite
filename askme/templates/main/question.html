@@ -1,0 +1,62 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+<!-- {% block Title %}
+    Main
+{% endblock %} -->
+
+{% block usrcard %}
+
+{% include 'main/include/nauser.html' %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-2 qcol">
+        <div class="qavatar">
+            <img src="{% static 'main/img/avatar.png' %}" alt="">
+        </div>
+        <div class="likebuttons">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+            <label class="form-check-label" for="inlineCheckbox1">1</label>
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+            <label class="form-check-label" for="inlineCheckbox2">2</label>
+
+        </div>
+    </div>
+    <div class="col-10 qcol">
+        <h2>{{question.title}}</h2>
+        <div class="qpreview" style="font-size: larger; max-height: 30rem; height: 100%; overflow-x: hidden;
+        overflow-y: scroll;">
+            <div>{{question.text}}</div>
+            <div class="row" style="padding-top: 0.5rem;">
+                <div class="col">
+                    <label>Tags:</label>
+                    {% for t in question.tags %}
+                    <a href="{% url 'tag' t %}">{{t}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<hr>
+
+{% include 'main/include/ablock.html' %}
+
+<hr>
+
+<div style="margin: 2rem 2rem 2rem 0; height: 15rem;">
+    <textarea class="form-control black_rounded_border" style="resize: none; height: 100%; width: 100%;"
+        maxlength="20000" placeholder="Enter answer here"></textarea>
+</div>
+
+<input class="btn btn-primary" type="button" value="Answer">
+
+{% endblock %}
