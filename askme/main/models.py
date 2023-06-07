@@ -29,6 +29,7 @@ class QuestionManager(models.Manager):
     def get_by_tag(self, tag_name):
         tag_id = Tag.objects.get(name=tag_name).id
         questions = self.filter(tag__exact=tag_id).order_by('creation_date')
+        questions.prefetch_related('tag')
         for q in questions:
             q.tags = q.tag.all()
         return questions
@@ -48,8 +49,6 @@ class Question(models.Model):
     text = models.TextField(null=True)
     user_id = models.ForeignKey('Profile', on_delete=models.CASCADE)
     rating = models.PositiveIntegerField()
-    correct = models.ForeignKey(
-        'Answer', null=True, blank=True, on_delete=models.SET_NULL)
     creation_date = models.DateTimeField(auto_now_add=True)
 
     tag = models.ManyToManyField('Tag')
@@ -79,6 +78,7 @@ class Answer(models.Model):
     question_id = models.ForeignKey('Question', on_delete=models.CASCADE)
     rating = models.PositiveIntegerField()
     creation_date = models.DateTimeField(auto_now_add=True)
+    correct = models.BooleanField(default = False)
 
     objects = AnswerManager()
 

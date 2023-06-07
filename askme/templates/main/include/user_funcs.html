@@ -1,0 +1,21 @@
+{% load static %}
+
+{% if request.user.is_authenticated %}
+    <div class="row">
+        <div class="col-5">
+            <img style="height: 5rem; display: block; margin-left: auto;" src="{% static 'main/img/avatar.png' %}">
+        </div>
+        <div class="col-7">
+            <div class="row" style="margin-top:0.5rem; margin-bottom: 1rem">
+                <div style="text-align: left;">UserName</div>
+            </div>
+            <a href="{% url 'settings' %}">settings</a>
+            <a href="{% url 'logout'   %}">log out</a>
+        </div>
+    </div>
+{% else %}
+    <div class="row text-center">
+        <a href="{% url 'login' %}">log in</a>
+        <a href="{% url 'signup' %}">sign up</a>
+    </div>
+{% endif %}
