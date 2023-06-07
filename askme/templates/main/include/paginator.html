@@ -1,16 +1,18 @@
 <nav style="margin-top: 1rem;">
     <ul class="pagination">
         <li class="page-item">
-            <a class="page-link" href="#" aria-label="Предыдущая">
+            <a class="page-link" href="?page={{ objects.number|add:'-1' }}" aria-label="Предыдущая">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
         {% for i in objects.paginator.page_range %}
+        {% if objects.number|add:'-5' < i and i < objects.number|add:'5' %}
         <li class="page-item {% if objects.number == i %} active {% endif %} "><a class="page-link"
                 href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
         {% endfor %}
         <li class="page-item">
-            <a class="page-link" href="#" aria-label="Следующая">
+            <a class="page-link" href="?page={{ objects.number|add:'1' }}" aria-label="Следующая">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>
