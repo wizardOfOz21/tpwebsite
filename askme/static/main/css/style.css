@@ -28,12 +28,22 @@
     padding-bottom: 100%;
 }
 
-.qavatar>img {
+.qavatar>p {
     position: absolute;
+    text-align: center;
     left: 0;
     right: 0;
-    height: 100%;
-    width: 100%;
+    top: 90%;
+}
+
+.qavatar>img {
+    position: absolute;
+    margin-right: auto;
+    margin-left: auto;
+    left: 0;
+    right: 0;
+    height: 90%;
+    width: 90%;
     object-fit: cover;
     border-radius: 50%;
 }

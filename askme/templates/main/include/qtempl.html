@@ -3,9 +3,10 @@
 <div class="question row">
     <div class="col-2 qcol">
         <div class="qavatar">
-            <img src="{% static 'main/img/avatar.png' %}" alt="">
+            <img src="{% static 'main/img/' %}{{q.user_id}}.png" alt="">
+            <p>{{q.user_id}}</p>
         </div>
-            {% include 'main/include/likecounter.html' with rating=q.rating %}
+        {% include 'main/include/likecounter.html' with rating=q.rating %}
     </div>
     <div class="col-10 qcol">
         <a href="{% url 'question' q.id %}">

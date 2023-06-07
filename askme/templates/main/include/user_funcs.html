@@ -3,11 +3,11 @@
 {% if request.user.is_authenticated %}
     <div class="row">
         <div class="col-5">
-            <img style="height: 5rem; display: block; margin-left: auto;" src="{% static 'main/img/avatar.png' %}">
+            <img style="height: 5rem; display: block; margin-left: auto;" src="{% static 'main/img/' %}{{request.user.username}}.png">
         </div>
         <div class="col-7">
             <div class="row" style="margin-top:0.5rem; margin-bottom: 1rem">
-                <div style="text-align: left;">UserName</div>
+                <div style="text-align: left;">{{ request.user.first_name }}</div>
             </div>
             <a href="{% url 'settings' %}">settings</a>
             <a href="{% url 'logout'   %}">log out</a>

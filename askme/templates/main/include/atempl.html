@@ -3,7 +3,8 @@
 <div class="answer row">
     <div class="col-2 qcol">
         <div class="qavatar">
-            <img src="{% static 'main/img/avatar.png' %}" alt="">
+            <img src="{% static 'main/img/' %}{{a.user_id}}.png" alt="">
+            <p>{{a.user_id}}</p>
         </div>
         {% include 'main/include/likecounter.html' with rating=a.rating %}
     </div>

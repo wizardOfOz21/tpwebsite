@@ -102,15 +102,14 @@ def log_in(request):
     return render(request, 'main/auth/login.html', context={'form': login_form, 'next': next_url})
 
 def signup(request):
-    # if request.method == "GET": 
-    #     reg_form = RegistrationForm()
-    # elif request.method == "POST":
-    #     reg_form = RegistrationForm(request.POST)
-
-    #     if reg_form.is_valid():
-    #         user = Profile.objects.
-    #         if user:
-    #             login(request, user)
-    #             return redirect(reverse('home'))
-    #         login_form.add_error(None, "Invalid username or password")
-    return render(request, 'main/auth/signup.html', context={'form': register_form})
+    if request.method == "GET": 
+        reg_form = RegistrationForm()
+    elif request.method == "POST":
+        reg_form = RegistrationForm(request.POST, request.FILES)
+        if reg_form.is_valid():
+            user = reg_form.save()
+            if user:
+                login(request, user)
+                return redirect(reverse('home'))
+            reg_form.add_error(None, "Saving error")
+    return render(request, 'main/auth/signup.html', context={'form': reg_form})

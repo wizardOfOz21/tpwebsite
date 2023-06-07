@@ -1,4 +1,5 @@
 import datetime
+import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -9,8 +10,13 @@ class ProfileManager(models.Manager):
         return self.filter(rating__gt=100)
 
 class Profile(models.Model):
+    def get_filename(instance, filename):
+        path = 'static/main/img/'
+        format = instance.profile.username + '.png'
+        return os.path.join(path, format)
+
     profile = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(null=True, upload_to='products/img/')
+    avatar = models.ImageField(upload_to=get_filename ,null=True, blank=True)
     rating = models.DecimalField(max_digits=6, decimal_places=2)
 
     objects = ProfileManager()
