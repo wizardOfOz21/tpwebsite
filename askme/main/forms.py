@@ -3,14 +3,15 @@ from django import forms
 from django.forms.utils import ErrorList
 from django.contrib.auth.models import User
 from .views import Profile
+import os
 
+IMG_DIR = 'static/main/img/'
 FIELD_CLASS = 'form-control black_rounded_border'
 
 def set_field(form, field, css_class, p_holder, max_length):
     form.fields[field].widget.attrs['class'] = css_class
     form.fields[field].widget.attrs['placeholder'] = p_holder
     form.fields[field].widget.attrs['maxlength'] = max_length
-
 
 class LoginForm(forms.Form):
     username = forms.CharField(min_length='4', widget=forms.TextInput)
@@ -52,4 +53,36 @@ class RegistrationForm(forms.ModelForm):
                                  email=data['email'],
                                  password=data['password'])
         Profile.objects.create(profile=user, avatar=data['avatar'], rating=0)
+        return user
+
+class EditForm(forms.ModelForm):
+    login  = forms.CharField(min_length='4', widget=forms.TextInput)
+    avatar = forms.ImageField(required=False)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super(EditForm, self).__init__(*args,**kwargs)
+        set_field(self, 'username', FIELD_CLASS, 'P.B.Parker', '50')
+        set_field(self, 'login', FIELD_CLASS, 'my_login42137', '50')
+        set_field(self, 'email', FIELD_CLASS, 'johndoe@gmail.com', '100')
+
+    # def clean(self):
+    #     return self.cleaned_data
+    
+    def save(self, user):
+        data = self.cleaned_data
+        user.username = data['login']
+        user.first_name = data['username']
+        user.email = data['email']
+        if data['avatar']:
+            path_to_avatar = os.path.join(IMG_DIR, str(user.id) + '.png')
+            if os.path.isfile(path_to_avatar):
+                os.remove(path_to_avatar)
+            user.profile.avatar = data['avatar']
+            user.profile.save()
+
+        user.save()
         return user

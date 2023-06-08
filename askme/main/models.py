@@ -5,18 +5,28 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
+IMG_DIR = 'static/main/img/'
+IMG_EXT = '.png'
+
 class ProfileManager(models.Manager):
     def get_popular(self):
         return self.filter(rating__gt=100)
 
 class Profile(models.Model):
+    
+    def get_avatar(self):
+        path_to_avatar = 'main/img/'+str(self.profile.id) + IMG_EXT
+        if os.path.isfile('static/'+path_to_avatar):
+            return 'main/img/'+str(self.profile.id) + IMG_EXT
+        else:
+            return 'main/img/no_avatar.png'
+    
     def get_filename(instance, filename):
-        path = 'static/main/img/'
-        format = instance.profile.username + '.png'
-        return os.path.join(path, format)
+        format = str(instance.profile.id) + IMG_EXT
+        return os.path.join(IMG_DIR, format)
 
     profile = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to=get_filename ,null=True, blank=True)
+    avatar = models.ImageField(upload_to=get_filename, null=True, blank=True)
     rating = models.DecimalField(max_digits=6, decimal_places=2)
 
     objects = ProfileManager()

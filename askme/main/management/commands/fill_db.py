@@ -3,17 +3,18 @@ from main.models import Profile, Question, Answer, Tag, Like
 from django.contrib.auth.models import User
 import random
 import string
+import shutil
 
+IMG_DIR = 'static/main/img/'
+IMG_EXT = '.png'
 
 def generate_random_string(length):
     letters = string.ascii_lowercase
     rand_string = ''.join(random.choice(letters) for i in range(length))
     return rand_string
 
-
 def generate_random_string_in_range(s, e):
     return generate_random_string(random.randint(s, e))
-
 
 def delete_users():
     User.objects.exclude(username='johndoe').delete()
@@ -48,6 +49,11 @@ def create_users(num):
         profiles.append(profile)
 
     Profile.objects.bulk_create(profiles)
+
+    # for i in range (1,num+1):
+    #     from_file = IMG_DIR+'/samples/'+str(random.randint(0,15))+IMG_EXT
+    #     to_file = IMG_DIR+str(i)+IMG_EXT
+    #     shutil.copy(from_file, to_file)
 
 def create_questions(num):
     questions = []

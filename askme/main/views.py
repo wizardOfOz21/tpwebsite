@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from .models import Profile, Question, Answer, Tag, Like
 from .forms import LoginForm
 from .forms import RegistrationForm
+from .forms import EditForm
 from django.contrib import auth
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -79,7 +80,21 @@ def ask(request):
 
 @login_required()
 def settings(request):
-    return render(request, 'main/settings.html')
+    if request.method == "GET":
+        user = request.user
+        edit_form = EditForm(initial={'username' : user.first_name, 
+                                      'login'    : user.username, 
+                                      'email'    : user.email})
+    elif request.method == "POST":
+        edit_form = EditForm(request.POST, request.FILES)
+
+        if edit_form.is_valid():
+            user = edit_form.save(user=request.user)
+            if user:
+                return redirect(reverse('settings'))
+            edit_form.add_error(None, "Error")
+
+    return render(request, 'main/settings.html', context={'form': edit_form})
 
 def log_in(request):
     if request.method == "GET":
