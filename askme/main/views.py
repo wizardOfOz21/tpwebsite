@@ -5,6 +5,7 @@ from .models import Profile, Question, Answer, Tag, Like
 from .forms import LoginForm
 from .forms import RegistrationForm
 from .forms import EditForm
+from .forms import AskForm
 from django.contrib import auth
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -76,7 +77,18 @@ def question(request, qid):
 
 @login_required()
 def ask(request):
-    return render(request, 'main/ask.html')
+    if request.method == "GET":
+        user = request.user
+        ask_form = AskForm()
+    elif request.method == "POST":
+        ask_form = AskForm(request.POST)
+
+        if ask_form.is_valid():
+            question = ask_form.save(user=request.user)
+            if question:
+                return redirect(reverse('question', kwargs={'qid': question.id}))
+            ask_form.add_error(None, "Saving question error")
+    return render(request, 'main/ask.html', context={'form': ask_form})
 
 @login_required()
 def settings(request):

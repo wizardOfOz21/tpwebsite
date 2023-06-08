@@ -62,7 +62,7 @@ class QuestionManager(models.Manager):
 
 class Question(models.Model):
     title = models.CharField(max_length=500)
-    text = models.TextField(null=True)
+    text = models.TextField(max_length=20000, null=True)
     user_id = models.ForeignKey('Profile', on_delete=models.CASCADE)
     rating = models.PositiveIntegerField()
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -104,7 +104,7 @@ class TagManager(models.Manager):
         return self.order_by('rating')
 
 class Tag(models.Model):
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=10, unique=True)
     rating = models.PositiveIntegerField()
 
     objects = TagManager()
