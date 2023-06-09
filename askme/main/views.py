@@ -6,6 +6,7 @@ from .forms import LoginForm
 from .forms import RegistrationForm
 from .forms import EditForm
 from .forms import AskForm
+from .forms import AnswerForm
 from django.contrib import auth
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -45,7 +46,6 @@ def hot(request):
 
     return render(request, 'main/hot.html', context)
 
-
 def tag(request, tname):
     questions = Question.objects.get_by_tag(tag_name=tname)
 
@@ -60,19 +60,30 @@ def tag(request, tname):
 
     return render(request, 'main/tag.html', context)
 
-
 def question(request, qid):
     q = Question.objects.get_by_id(question_id=qid)
+    if request.method == "GET":
+        answer_form = AnswerForm()
+    elif request.method == "POST":
+        answer_form = AnswerForm(request.POST)
+
+        if answer_form.is_valid():
+            if not request.user.is_authenticated:
+                answer_form.add_error(None, "Please log in to answer")
+            else:
+                answer = answer_form.save(user=request.user, question=q)
+                if answer:
+                    return redirect("%s?page=-1" % reverse('question', kwargs={'qid': qid}))
+                answer_form.add_error(None, "Saving answer error")
 
     answers = paginate(Answer.objects.get_by_qid(question_id=qid), request, 3)
-
     context = {
         'question': q,
         'answers': answers,
         'hot_tags': Tag.objects.get_popular()[:10],
         'best_members': Profile.objects.get_popular()[:10],
+        'form': answer_form,
     }
-
     return render(request, 'main/question.html', context)
 
 @login_required()

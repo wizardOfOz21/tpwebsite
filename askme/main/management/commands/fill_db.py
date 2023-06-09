@@ -56,59 +56,70 @@ def create_users(num):
     #     shutil.copy(from_file, to_file)
 
 def create_questions(num):
+    f = open('../w&p.txt', 'r')
     questions = []
+    profiles = Profile.objects.all()
     for i in range(1, num):
         question = Question(
-            title='Question about ' + generate_random_string_in_range(5, 20),
-            text=generate_random_string(random.randint(100, 2000)),
-            user_id=random.choice(Profile.objects.all()),
-            rating=random.randint(0, 200),
+            title= f.read(random.randint(5, 20)),
+            text=f.read(random.randint(100, 500)),
+            user_id=random.choice(profiles),
+            rating=0,
         )
-
-        question.save()
-
-        question.tag.add(
-            *random.choices(Tag.objects.all(), k=random.randint(1, 5)))
-
         questions.append(question)
-
-    # Question.objects.bulk_create(questions)
+        
+    f.close()
+    Question.objects.bulk_create(questions)
+    tags = Tag.objects.all()
+    new_questions = Question.objects.order_by('-creation_date')[:100]
+    for q in new_questions:
+        chosen = random.choices(tags, k=random.randint(1, 5))
+        for t in chosen:
+            t.rating+=1
+            t.save
+        q.tag.add(*chosen)
 
 def create_answers(num):
+    f = open('../w&p.txt', 'r')
     answers = []
+    profiles = Profile.objects.all()
+    questions = Question.objects.all()
     for i in range(1, num):
         answer = Answer(
-            text=generate_random_string(random.randint(100, 2000)),
-            user_id=random.choice(Profile.objects.all()),
-            question_id=random.choice(Question.objects.all()),
-            rating=random.randint(0, 400),
+            text=f.read(random.randint(100, 400)),
+            user_id=random.choice(profiles),
+            question_id=random.choice(questions),
+            rating=0,
         )
         answers.append(answer)
-
+    f.close()
     Answer.objects.bulk_create(answers)
 
 def create_tags(num):
     tags = []
     for i in range(1, num):
-        tag = Tag(name=generate_random_string_in_range(1, 7), rating=0)
+        tag = Tag(name=str(i), rating=0)
         tags.append(tag)
 
     Tag.objects.bulk_create(tags)
 
 def create_rates(num):
     rates = []
+    profiles = Profile.objects.all()
+    questions = Question.objects.all()
+    answers = Answer.objects.all()
     for i in range(1, num//2):
         like = Like(
-            user_id=random.choice(Profile.objects.all()),
-            content_object=random.choice(Question.objects.all()),
+            user_id=random.choice(profiles),
+            content_object=random.choice(questions),
             rate=random.choice([True, False]),
         )
         rates.append(like)
 
     for i in range(1, num//2):
         like = Like(
-            user_id=random.choice(Profile.objects.all()),
-            content_object=random.choice(Answer.objects.all()),
+            user_id=random.choice(profiles),
+            content_object=random.choice(answers),
             rate=random.choice([True, False]),
         )
         rates.append(like)
@@ -124,12 +135,17 @@ class Command(BaseCommand):
         ratio = options['ratio']
         delete_users()
         create_users(ratio)
+        print('users created')
         delete_tags()
         create_tags(ratio)
+        print('tags created')
         delete_questions()
         create_questions(ratio*10)
+        print('questions created')
         delete_answers()
         create_answers(ratio*100)
+        print('answers created')
         delete_rates()
         create_rates(ratio*200)
+        print('rates created')
         return 'ok'

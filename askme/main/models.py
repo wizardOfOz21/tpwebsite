@@ -44,7 +44,7 @@ class QuestionManager(models.Manager):
     
     def get_by_tag(self, tag_name):
         tag_id = Tag.objects.get(name=tag_name).id
-        questions = self.filter(tag__exact=tag_id).order_by('creation_date')
+        questions = self.filter(tag__exact=tag_id).order_by('-creation_date')
         questions.prefetch_related('tag')
         for q in questions:
             q.tags = q.tag.all()
@@ -66,9 +66,7 @@ class Question(models.Model):
     user_id = models.ForeignKey('Profile', on_delete=models.CASCADE)
     rating = models.PositiveIntegerField()
     creation_date = models.DateTimeField(auto_now_add=True)
-
     tag = models.ManyToManyField('Tag')
-
     objects = QuestionManager()
 
     def get_new_questions():
@@ -86,10 +84,10 @@ class Question(models.Model):
 
 class AnswerManager(models.Manager):
     def get_by_qid(self, question_id):
-        return self.filter(question_id__exact=question_id).order_by('-rating','-creation_date')
+        return self.filter(question_id__exact=question_id).order_by('creation_date')
 
 class Answer(models.Model):
-    text = models.TextField(null=True)
+    text = models.TextField(max_length="20000", null=True)
     user_id = models.ForeignKey('Profile', on_delete=models.CASCADE)
     question_id = models.ForeignKey('Question', on_delete=models.CASCADE)
     rating = models.PositiveIntegerField()
@@ -101,7 +99,7 @@ class Answer(models.Model):
 
 class TagManager(models.Manager):
     def get_popular(self):
-        return self.order_by('rating')
+        return self.order_by('-rating')
 
 class Tag(models.Model):
     name = models.CharField(max_length=10, unique=True)

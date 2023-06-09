@@ -128,6 +128,9 @@ class AskForm(forms.ModelForm):
             if not has(tag, tag_objs):
                 new_tag = Tag(name=tag, rating=1)
                 new_tags.append(new_tag)
+        for tag in tag_objs:
+            tag.rating += 1
+            tag.save()
 
         print(new_tags)
         Tag.objects.bulk_create(new_tags)
@@ -135,35 +138,27 @@ class AskForm(forms.ModelForm):
         question.tag.add(*new_objs)
         return question
 
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['text']
 
-# class AnswerForm(forms.ModelForm):
-#     login  = forms.CharField(min_length='4', widget=forms.TextInput)
-#     avatar = forms.ImageField(required=False)
+    def __init__(self, *args, **kwargs):
+        super(AnswerForm, self).__init__(*args,**kwargs)
+        set_field(self, 'text', FIELD_CLASS, 'Your answer')
 
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email']
-
-#     def __init__(self, *args, **kwargs):
-#         super(EditForm, self).__init__(*args,**kwargs)
-#         set_field(self, 'username', FIELD_CLASS, 'P.B.Parker', '50')
-#         set_field(self, 'login', FIELD_CLASS, 'my_login42137', '50')
-#         set_field(self, 'email', FIELD_CLASS, 'johndoe@gmail.com', '100')
-
-#     # def clean(self):
-#     #     return self.cleaned_data
+    def clean(self):
+        # raise forms.ValidationError('Just Error')
+        return self.cleaned_data
     
-#     def save(self, user):
-#         data = self.cleaned_data
-#         user.username = data['login']
-#         user.first_name = data['username']
-#         user.email = data['email']
-#         if data['avatar']:
-#             path_to_avatar = os.path.join(IMG_DIR, str(user.id) + '.png')
-#             if os.path.isfile(path_to_avatar):
-#                 os.remove(path_to_avatar)
-#             user.profile.avatar = data['avatar']
-#             user.profile.save()
-
-#         user.save()
-#         return user
+    def save(self, user, question):
+        data = self.cleaned_data
+        answer = Answer(
+            text=data['text'],
+            user_id=user.profile,
+            question_id=question,
+            rating=0,
+            correct=False,
+        )
+        answer.save()
+        return answer

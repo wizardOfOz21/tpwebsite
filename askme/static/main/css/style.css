@@ -36,6 +36,12 @@
     top: 90%;
 }
 
+.text_area_container>textarea {
+    resize: none; 
+    height: 100%; 
+    width: 100%;
+}
+
 .qavatar>img {
     position: absolute;
     margin-right: auto;
