@@ -34,7 +34,6 @@ class Profile(models.Model):
     def __str__(self):
         return self.profile.username
 
-
 class QuestionManager(models.Manager):
     def get_popular(self):
         return self.order_by('-rating')
@@ -81,7 +80,6 @@ class Question(models.Model):
             q.tags = q.tag.all()
         return questions
 
-
 class AnswerManager(models.Manager):
     def get_by_qid(self, question_id):
         return self.filter(question_id__exact=question_id).order_by('creation_date')
@@ -96,7 +94,6 @@ class Answer(models.Model):
 
     objects = AnswerManager()
 
-
 class TagManager(models.Manager):
     def get_popular(self):
         return self.order_by('-rating')
@@ -109,7 +106,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class LikeManager(models.Manager):
     pass

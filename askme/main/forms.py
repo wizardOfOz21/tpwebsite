@@ -28,7 +28,7 @@ class RegistrationForm(forms.ModelForm):
     login          = forms.CharField(min_length='4', widget=forms.TextInput)
     password       = forms.CharField(min_length='4', widget=forms.PasswordInput)
     password_check = forms.CharField(min_length='4', widget=forms.PasswordInput)
-    avatar         = forms.ImageField()
+    avatar         = forms.ImageField(required=False)
 
     class Meta:
         model = User
@@ -36,25 +36,28 @@ class RegistrationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args,**kwargs)
-        set_field(self, 'username', FIELD_CLASS, 'P.B.Parker')
-        set_field(self, 'login', FIELD_CLASS, 'my_login42137')
-        set_field(self, 'email', FIELD_CLASS, 'johndoe@gmail.com')
-        set_field(self, 'password', FIELD_CLASS, 'Password')
+        set_field(self, 'username',       FIELD_CLASS, 'P.B.Parker')
+        set_field(self, 'login',          FIELD_CLASS, 'my_login42137')
+        set_field(self, 'email',          FIELD_CLASS, 'johndoe@gmail.com')
+        set_field(self, 'password',       FIELD_CLASS, 'Password')
         set_field(self, 'password_check', FIELD_CLASS, 'Password')
-
+    
     def clean(self):
-        password = self.cleaned_data['password']
-        password_check = self.cleaned_data['password_check']
-        if password != password_check :
-            raise forms.ValidationError('Passwords do not match')
+        if not self._errors:
+            password = self.cleaned_data['password']
+            password_check = self.cleaned_data['password_check']
+            if password != password_check :
+                raise forms.ValidationError('Passwords do not match')
+            if User.objects.filter(username=self.cleaned_data['login']).exists():
+                raise forms.ValidationError('Login already exists')
         return self.cleaned_data
     
     def save(self):
         data = self.cleaned_data
         user = User.objects.create_user(username=data['login'],
-                                 first_name=data['username'],
-                                 email=data['email'],
-                                 password=data['password'])
+                                        first_name=data['username'],
+                                        email=data['email'],
+                                        password=data['password'])
         Profile.objects.create(profile=user, avatar=data['avatar'], rating=0)
         return user
 
@@ -69,11 +72,14 @@ class EditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EditForm, self).__init__(*args,**kwargs)
         set_field(self, 'username', FIELD_CLASS, 'P.B.Parker')
-        set_field(self, 'login', FIELD_CLASS, 'my_login42137')
-        set_field(self, 'email', FIELD_CLASS, 'johndoe@gmail.com')
+        set_field(self, 'login',    FIELD_CLASS, 'my_login42137')
+        set_field(self, 'email',    FIELD_CLASS, 'johndoe@gmail.com')
 
-    # def clean(self):
-    #     return self.cleaned_data
+    def clean(self):
+        if not self._errors:
+            if User.objects.filter(username=self.cleaned_data['login']).exists():
+                raise forms.ValidationError('Login already exists')
+        return self.cleaned_data
     
     def save(self, user):
         data = self.cleaned_data
@@ -99,8 +105,8 @@ class AskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AskForm, self).__init__(*args,**kwargs)
         set_field(self, 'title', FIELD_CLASS, 'Title')
-        set_field(self, 'text', FIELD_CLASS, 'Question')
-        set_field(self, 'tag', FIELD_CLASS, 'Some tags')
+        set_field(self, 'text',  FIELD_CLASS, 'Question')
+        set_field(self, 'tag',   FIELD_CLASS, 'Some tags')
 
     # def clean(self):
     #     return self.cleaned_data
