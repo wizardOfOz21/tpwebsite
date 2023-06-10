@@ -5,3 +5,5 @@ help.txt
 **/__pycache__
 
 askme/db.sqlite3
+
+info.txt
