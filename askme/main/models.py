@@ -5,10 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
-
 class ProfileManager(models.Manager):
     def get_popular(self):
-        return self.filter(rating__gt=100)
+        return self.order_by('-rating')
 
 class Profile(models.Model):
     
@@ -45,7 +44,7 @@ class Question(models.Model):
     title = models.CharField(max_length=500)
     text = models.TextField(max_length=20000, null=True)
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(default=0, null=False)
+    rating = models.IntegerField(default=0, null=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     tag = models.ManyToManyField('Tag')
     objects = QuestionManager()
@@ -58,7 +57,7 @@ class Answer(models.Model):
     text = models.TextField(max_length="20000", null=True)
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
     question = models.ForeignKey('Question', on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(default=0, null=False)
+    rating = models.IntegerField(default=0, null=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     correct = models.BooleanField(default = False)
 

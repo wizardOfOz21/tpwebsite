@@ -40,7 +40,7 @@ def create_users(num):
 
     profiles = []
     for user in User.objects.all():
-        profile = Profile(user=user)
+        profile = Profile(user=user, rating=random.randint(20,40))
         profiles.append(profile)
 
     Profile.objects.bulk_create(profiles)
@@ -62,9 +62,9 @@ def create_questions(num):
     new_questions = Question.objects.order_by('-creation_date')[:100]
     for q in new_questions:
         chosen = random.choices(tags, k=random.randint(1, 5))
-        for t in chosen:
-            t.rating+=1
-            t.save
+        for tag in chosen:
+            tag.rating += 1
+            tag.save()
         q.tag.add(*chosen)
 
 def create_answers(num):
@@ -95,19 +95,34 @@ def create_rates(num):
     profiles = Profile.objects.all()
     questions = Question.objects.all()
     answers = Answer.objects.all()
+
     for i in range(1, num//2):
+        rate = random.choice([True, False])
+        q = random.choice(questions)
+        if rate:
+            q.rating += 1
+        else:
+            q.rating -= 1
+        q.save()
         like = Like(
             profile=random.choice(profiles),
-            content_object=random.choice(questions),
-            rate=random.choice([True, False]),
+            content_object=q,
+            rate=rate,
         )
         rates.append(like)
 
     for i in range(1, num//2):
+        rate = random.choice([True, False])
+        a = random.choice(answers)
+        if rate:
+            a.rating += 1
+        else:
+            a.rating -= 1
+        a.save()
         like = Like(
             profile=random.choice(profiles),
-            content_object=random.choice(answers),
-            rate=random.choice([True, False]),
+            content_object=a,
+            rate=rate,
         )
         rates.append(like)
 

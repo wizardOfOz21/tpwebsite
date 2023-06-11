@@ -2,9 +2,9 @@
     <div class="col-2 qcol">
         <div class="qavatar">
             <img src="{{ question.profile.avatar.url }}" alt="">
-            <p>{{ question.profile }}</p>
+            <p>{{ question.profile }}({{ question.profile.rating }})</p>
         </div>
-        {% include 'main/include/like_counter.html' with rating=question.rating%}
+        {% include 'main/include/like_counter.html' with rating=question.rating %}
     </div>
     <div class="col-10 qcol">
         <a href="{% url 'question' question.id %}">
