@@ -1,7 +1,5 @@
 {% extends 'main/base.html' %}
 
-{% load static %}
-
 {% block content %}
 
 <h2>Settings: {{ request.user.first_name }}</h2>
@@ -21,7 +19,7 @@
         <div class="col-5">
             {% if field.html_name == "avatar" %}
             <img class="black_rounded_border mb-2" style="height: 8rem; display: block;"
-                src="{% static request.user.profile.get_avatar %}">
+                src="{{ request.user.profile.avatar.url }}">
             {% endif %}
             {{ field }}
         </div>

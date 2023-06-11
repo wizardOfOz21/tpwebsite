@@ -5,6 +5,6 @@
 <h2 style="display: inline; margin-right: 2rem;">HotQuestions</h2>
 <a href="{% url 'home' %}">New questions</a>
 
-{% include 'main/include/qblock.html' %}
+{% include 'main/include/qblock.html' with questions=questions %}
 
 {% endblock %}

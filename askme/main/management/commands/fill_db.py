@@ -5,9 +5,6 @@ import random
 import string
 import shutil
 
-IMG_DIR = 'static/main/img/'
-IMG_EXT = '.png'
-
 def generate_random_string(length):
     letters = string.ascii_lowercase
     rand_string = ''.join(random.choice(letters) for i in range(length))
@@ -17,8 +14,7 @@ def generate_random_string_in_range(s, e):
     return generate_random_string(random.randint(s, e))
 
 def delete_users():
-    User.objects.exclude(username='johndoe').delete()
-    Profile.objects.all().delete()
+    User.objects.all().delete()
 
 def delete_questions():
     Question.objects.all().delete()
@@ -33,9 +29,7 @@ def delete_rates():
     Like.objects.all().delete()
 
 def create_users(num):
-    profiles = []
     users = []
-
     for i in range(1, num+1):
         user = User(username=generate_random_string_in_range(5, 10),
                     email=generate_random_string_in_range(5, 15)+"@gmail.com",
@@ -44,16 +38,12 @@ def create_users(num):
 
     User.objects.bulk_create(users)
 
+    profiles = []
     for user in User.objects.all():
-        profile = Profile(profile=user, rating=random.randint(0, 500))
+        profile = Profile(user=user)
         profiles.append(profile)
 
     Profile.objects.bulk_create(profiles)
-
-    # for i in range (1,num+1):
-    #     from_file = IMG_DIR+'/samples/'+str(random.randint(0,15))+IMG_EXT
-    #     to_file = IMG_DIR+str(i)+IMG_EXT
-    #     shutil.copy(from_file, to_file)
 
 def create_questions(num):
     f = open('../w&p.txt', 'r')
@@ -61,13 +51,11 @@ def create_questions(num):
     profiles = Profile.objects.all()
     for i in range(1, num):
         question = Question(
-            title= f.read(random.randint(5, 20)),
+            title=f.read(random.randint(5, 20)),
             text=f.read(random.randint(100, 500)),
-            user_id=random.choice(profiles),
-            rating=0,
+            profile=random.choice(profiles),
         )
         questions.append(question)
-        
     f.close()
     Question.objects.bulk_create(questions)
     tags = Tag.objects.all()
@@ -87,9 +75,8 @@ def create_answers(num):
     for i in range(1, num):
         answer = Answer(
             text=f.read(random.randint(100, 400)),
-            user_id=random.choice(profiles),
-            question_id=random.choice(questions),
-            rating=0,
+            profile=random.choice(profiles),
+            question=random.choice(questions),
         )
         answers.append(answer)
     f.close()
@@ -110,7 +97,7 @@ def create_rates(num):
     answers = Answer.objects.all()
     for i in range(1, num//2):
         like = Like(
-            user_id=random.choice(profiles),
+            profile=random.choice(profiles),
             content_object=random.choice(questions),
             rate=random.choice([True, False]),
         )
@@ -118,7 +105,7 @@ def create_rates(num):
 
     for i in range(1, num//2):
         like = Like(
-            user_id=random.choice(profiles),
+            profile=random.choice(profiles),
             content_object=random.choice(answers),
             rate=random.choice([True, False]),
         )
@@ -129,7 +116,7 @@ def create_rates(num):
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
-            'ratio', type=int, help='Указывает сколько пользователей необходимо создать')
+            'ratio', type=int, help='number of users')
 
     def handle(self, *args, **options):
         ratio = options['ratio']

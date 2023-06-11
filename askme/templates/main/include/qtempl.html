@@ -1,35 +1,31 @@
-{% load static %}
-
 <div class="question row">
     <div class="col-2 qcol">
         <div class="qavatar">
-            <img src="{% static q.user_id.get_avatar %}" alt="">
-            <p>{{q.user_id}}</p>
+            <img src="{{ question.profile.avatar.url }}" alt="">
+            <p>{{ question.profile }}</p>
         </div>
-        {% include 'main/include/likecounter.html' with rating=q.rating %}
+        {% include 'main/include/like_counter.html' with rating=question.rating%}
     </div>
     <div class="col-10 qcol">
-        <a href="{% url 'question' q.id %}">
-            <h3>{{ q.title }}</h3>
+        <a href="{% url 'question' question.id %}">
+            <h3>{{ question.title }}</h3>
         </a>
         <div class="qpreview ">
-            {{ q.text }}
+            {{ question.text }}
         </div>
 
         <div class="row" style="padding-top: 0.5rem;">
             <div class="col">
-                <a href="{% url 'question' q.id %}">answers({{ q.anum }})</a>
-
+                <a href="{% url 'question' question.id %}">answers({{ q.answers_num }})</a>
             </div>
             <div class="col">
                 <label>Tags:</label>
                 <span class="tags">
-                    {% for t in q.tags %}
-                    <a href="{% url 'tag' t %}">{{t}}</a>
+                    {% for tag in question.tag.all %}
+                        <a href="{% url 'tag' tag %}">{{tag}}</a>
                     {% endfor %}
                 </span>
             </div>
         </div>
-
     </div>
 </div>

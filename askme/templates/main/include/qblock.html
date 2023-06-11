@@ -1,6 +1,6 @@
 <div class="questions">
-    {% for qt in questions %}
-    {% include 'main/include/qtempl.html' with q=qt %}
+    {% for question in questions %}
+        {% include 'main/include/qtempl.html' with question=question %}
     {% endfor %}
 </div>
 

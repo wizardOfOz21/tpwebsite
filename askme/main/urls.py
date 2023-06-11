@@ -5,8 +5,8 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', views.index, name='home'),
     path('hot/', views.hot, name='hot'),
-    path('tag/<str:tname>/', views.tag, name='tag'),
-    path('question/<int:qid>', views.question, name='question'),
+    path('tag/<str:tag_name>/', views.tag, name='tag'),
+    path('question/<int:q_id>', views.question, name='question'),
     path('ask', views.ask, name='ask'),
     path('settings', views.settings, name='settings'),
     path('signup', views.signup, name='signup'),

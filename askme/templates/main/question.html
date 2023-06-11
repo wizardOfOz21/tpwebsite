@@ -1,16 +1,14 @@
 {% extends 'main/base.html' %}
 
-{% load static %}
-
 {% block content %}
 
 <div class="row">
     <div class="col-2 qcol">
         <div class="qavatar">
-            <img src="{% static question.user_id.get_avatar %}" alt="">
-            <p>{{question.user_id}}</p>
+            <img src="{{ question.profile.avatar.url }}" alt="">
+            <p>{{question.profile}}</p>
         </div>
-        {% include 'main/include/likecounter.html' with rating=question.rating %}
+        {% include 'main/include/like_counter.html' with rating=question.rating %}
     </div>
     <div class="col-10 qcol">
         <h2>{{question.title}}</h2>
@@ -20,14 +18,12 @@
             <div class="row" style="padding-top: 0.5rem;">
                 <div class="col">
                     <label>Tags:</label>
-                    {% for t in question.tags %}
-                    <a href="{% url 'tag' t %}">{{t}}</a>
+                    {% for tag in question.tag.all %}
+                        <a href="{% url 'tag' tag %}">{{tag}}</a>
                     {% endfor %}
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
