@@ -4,7 +4,7 @@
             <img src="{{ answer.profile.avatar.url }}" alt="">
             <p>{{answer.profile}}</p>
         </div>
-        {% include 'main/include/like_counter.html' with rating=answer.rating %}
+        {% include 'main/include/like_counter.html' with rating=answer.rating type='a' id=answer.id %}
     </div>
     <div class="col-10 qcol">
         <div class="qpreview ">

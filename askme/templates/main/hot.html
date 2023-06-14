@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -6,5 +7,12 @@
 <a href="{% url 'home' %}">New questions</a>
 
 {% include 'main/include/qblock.html' with questions=questions %}
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{% static "main/js/jquery-3.7.0.min.js" %}"></script>
+<script src="{% static "main/js/main.js" %}"></script>
 
 {% endblock %}
