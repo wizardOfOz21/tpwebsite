@@ -12,4 +12,6 @@ urlpatterns = [
     path('signup', views.signup, name='signup'),
     path('login', views.log_in, name='login'),
     path('logout', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('vote/', views.vote, name='vote'),
+    path('set_correct/', views.set_correct, name='set_correct'),
 ]

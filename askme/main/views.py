@@ -1,6 +1,6 @@
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 from .models import Profile, Question, Answer, Tag, Like
 from .forms import LoginForm
@@ -14,6 +14,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_POST
+from django.core.exceptions import BadRequest
+from django.contrib.contenttypes.models import ContentType
 
 QUESTION_PAGE_NUM = 6
 ANSWERS_PAGE_NUM = 3
@@ -82,6 +85,10 @@ def question(request, q_id):
 
     answers = Answer.objects.get_by_qid(question_id=q_id)
     page_objects = paginate(answers, request, ANSWERS_PAGE_NUM)
+    if request.user.is_authenticated:
+        show_correct = question.profile == request.user.profile
+    else: 
+        show_correct = False
 
     context = {
         'question': question,
@@ -89,6 +96,7 @@ def question(request, q_id):
         'hot_tags': Tag.objects.get_popular()[:10],
         'best_members': Profile.objects.get_popular()[:10],
         'form': answer_form,
+        'show_correct': show_correct,
     }
     return render(request, 'main/question.html', context)
 
@@ -156,3 +164,86 @@ def signup(request):
                 return redirect(reverse('home'))
             reg_form.add_error(None, "Saving error")
     return render(request, 'main/auth/signup.html', context={'form': reg_form})
+
+@login_required()
+@require_POST
+def vote(request):
+    type = request.POST['type']
+    id = request.POST['id']
+    rate = request.POST['rate']
+
+    if type == 'q':
+        content_obj = Question.objects.filter(id=id).first()
+    elif type == 'a':
+        content_obj = Answer.objects.filter(id=id).first()
+
+    if not content_obj: raise BadRequest('No such object')
+
+    object_ct = ContentType.objects.get_for_model(content_obj).id
+    like = Like.objects.filter(object_id=content_obj.id, content_type=object_ct, profile=request.user.profile).first()
+    print(like)
+    if rate == 'p':
+        if not like:
+            content_obj.rating+=1
+            like = Like(
+                profile=request.user.profile,
+                content_object=content_obj,
+                rate=True)
+            like.save()
+        elif not like.rate:
+            like.rate = True
+            content_obj.rating+=2
+            like.save()
+        else:
+            content_obj.rating-=1
+            like.delete()
+    elif rate == 'm':
+        if not like:
+            print('11')
+            content_obj.rating-=1
+            like = Like(
+                profile=request.user.profile,
+                content_object=content_obj,
+                rate=False)
+            like.save()
+        elif like.rate:
+            like.rate = False
+            content_obj.rating-=2
+            like.save()
+        else:
+            content_obj.rating+=1
+            like.delete()
+
+    content_obj.save()
+
+    return JsonResponse({
+        'new_rating': content_obj.rating,
+    })
+
+@login_required()
+@require_POST
+def set_correct(request):
+    id = request.POST['id']
+
+    answer = Answer.objects.filter(id=id).first()
+    if not answer: raise BadRequest('No such object')
+    question = answer.question
+    if question.profile != request.user.profile: raise BadRequest('Access is denied')
+
+    is_correct = answer.correct
+    if is_correct:
+        answer.correct = False
+    else:
+        correct_answer = Answer.objects.filter(question=question, correct=True).first()
+        if correct_answer:
+            correct_answer.correct = False
+            correct_answer.save()
+        answer.correct = True
+    answer.save()
+
+    print(answer)
+    print(answer.correct)
+
+    return JsonResponse({
+        'is_correct': answer.correct,
+    })

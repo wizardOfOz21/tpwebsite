@@ -4,7 +4,7 @@
             <img src="{{ answer.profile.avatar.url }}" alt="">
             <p>{{answer.profile}}</p>
         </div>
-        {% include 'main/include/like_counter.html' with rating=answer.rating %}
+        {% include 'main/include/like_counter.html' with rating=answer.rating type='a' id=answer.id %}
     </div>
     <div class="col-10 qcol">
         <div class="qpreview ">
@@ -14,10 +14,16 @@
         <div class="row" style="padding-top: 0.5rem;">
             <div class="col">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                    <label class="form-check-label" for="flexCheckDefault">
-                        Correct!
-                    </label>
+                    {% if show_correct %}
+                        <input data-id='{{answer.id}}' class="correct_checkbox form-check-input" name="correct" type="radio" {% if answer.correct %}checked{% endif %} id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Correct!
+                        </label>
+                    {% else %}
+                        {% if answer.correct %}
+                            <label>Correct answer</label>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>

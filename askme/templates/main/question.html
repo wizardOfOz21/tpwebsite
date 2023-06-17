@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -8,7 +9,7 @@
             <img src="{{ question.profile.avatar.url }}" alt="">
             <p>{{question.profile}}</p>
         </div>
-        {% include 'main/include/like_counter.html' with rating=question.rating %}
+        {% include 'main/include/like_counter.html' with rating=question.rating type='q' id=question.id %}
     </div>
     <div class="col-10 qcol">
         <h2>{{question.title}}</h2>
@@ -29,7 +30,7 @@
 
 <hr id="ablock_start">
 
-{% include 'main/include/ablock.html' with anchor='ablock_start' %}
+{% include 'main/include/ablock.html' with anchor='ablock_start' show_correct=show_correct %}
 
 <hr id="ablock_end">
 
@@ -53,5 +54,12 @@
 
     <input class="btn btn-primary" type="submit" value="Ask!">
 </form>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{% static "main/js/jquery-3.7.0.min.js" %}"></script>
+<script src="{% static "main/js/main.js" %}"></script>
 
 {% endblock %}

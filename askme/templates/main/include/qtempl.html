@@ -4,7 +4,7 @@
             <img src="{{ question.profile.avatar.url }}" alt="">
             <p>{{ question.profile }}({{ question.profile.rating }})</p>
         </div>
-        {% include 'main/include/like_counter.html' with rating=question.rating %}
+        {% include 'main/include/like_counter.html' with rating=question.rating type='q' id=question.id %}
     </div>
     <div class="col-10 qcol">
         <a href="{% url 'question' question.id %}">
