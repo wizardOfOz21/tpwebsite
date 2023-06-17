@@ -85,6 +85,10 @@ def question(request, q_id):
 
     answers = Answer.objects.get_by_qid(question_id=q_id)
     page_objects = paginate(answers, request, ANSWERS_PAGE_NUM)
+    if request.user.is_authenticated:
+        show_correct = question.profile == request.user.profile
+    else: 
+        show_correct = False
 
     context = {
         'question': question,
@@ -92,6 +96,7 @@ def question(request, q_id):
         'hot_tags': Tag.objects.get_popular()[:10],
         'best_members': Profile.objects.get_popular()[:10],
         'form': answer_form,
+        'show_correct': show_correct,
     }
     return render(request, 'main/question.html', context)
 
@@ -213,4 +218,32 @@ def vote(request):
 
     return JsonResponse({
         'new_rating': content_obj.rating,
+    })
+
+@login_required()
+@require_POST
+def set_correct(request):
+    id = request.POST['id']
+
+    answer = Answer.objects.filter(id=id).first()
+    if not answer: raise BadRequest('No such object')
+    question = answer.question
+    if question.profile != request.user.profile: raise BadRequest('Access is denied')
+
+    is_correct = answer.correct
+    if is_correct:
+        answer.correct = False
+    else:
+        correct_answer = Answer.objects.filter(question=question, correct=True).first()
+        if correct_answer:
+            correct_answer.correct = False
+            correct_answer.save()
+        answer.correct = True
+    answer.save()
+
+    print(answer)
+    print(answer.correct)
+
+    return JsonResponse({
+        'is_correct': answer.correct,
     })
