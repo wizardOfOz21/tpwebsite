@@ -1,4 +1,5 @@
 import datetime
+import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -6,18 +7,18 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 
 class ProfileManager(models.Manager):
     def get_popular(self):
-        return self.filter(rating__gt=100)
+        return self.order_by('-rating')
 
 class Profile(models.Model):
-    profile = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(null=True, upload_to='products/img/')
-    rating = models.DecimalField(max_digits=6, decimal_places=2)
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(null=False, blank=True, upload_to='avatars/%Y/%m/%d/', default='avatars/default_avatar.png')
+    rating = models.DecimalField(max_digits=6, decimal_places=2, default=0, null=False)
 
     objects = ProfileManager()
 
     def __str__(self):
-        return self.profile.username
-
+        return self.user.username
 
 class QuestionManager(models.Manager):
     def get_popular(self):
@@ -27,17 +28,13 @@ class QuestionManager(models.Manager):
         return self.order_by('-creation_date')
     
     def get_by_tag(self, tag_name):
-        tag_id = Tag.objects.get(name=tag_name).id
-        questions = self.filter(tag__exact=tag_id).order_by('creation_date')
-        for q in questions:
-            q.tags = q.tag.all()
+        tag = Tag.objects.get(name=tag_name)
+        questions = self.filter(tag__exact=tag).order_by('-creation_date')
+        questions.prefetch_related('tag')
         return questions
     
-    def get_by_id(self, question_id):
-        question = self.get(id=question_id)
-        question.tags = question.tag.all()
-
-        return question
+    def get_by_id(self, q_id):
+        return self.get(id=q_id)
     
     def get_tags(self, question_id):
         question = self.get_by_id(question_id)
@@ -45,63 +42,43 @@ class QuestionManager(models.Manager):
 
 class Question(models.Model):
     title = models.CharField(max_length=500)
-    text = models.TextField(null=True)
-    user_id = models.ForeignKey('Profile', on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField()
-    correct = models.ForeignKey(
-        'Answer', null=True, blank=True, on_delete=models.SET_NULL)
+    text = models.TextField(max_length=20000, null=True)
+    profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    rating = models.IntegerField(default=0, null=False)
     creation_date = models.DateTimeField(auto_now_add=True)
-
     tag = models.ManyToManyField('Tag')
-
     objects = QuestionManager()
-
-    def get_new_questions():
-        questions = Question.objects.get_new()
-        for q in questions:
-            q.tags = q.tag.all()
-        return questions
-    
-    def get_popular_questions():
-        questions = Question.objects.get_popular()
-        for q in questions:
-            q.tags = q.tag.all()
-        return questions
-
 
 class AnswerManager(models.Manager):
     def get_by_qid(self, question_id):
-        return self.filter(question_id__exact=question_id).order_by('-rating','-creation_date')
+        return self.filter(question_id__exact=question_id).order_by('creation_date')
 
 class Answer(models.Model):
-    text = models.TextField(null=True)
-    user_id = models.ForeignKey('Profile', on_delete=models.CASCADE)
-    question_id = models.ForeignKey('Question', on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField()
+    text = models.TextField(max_length="20000", null=True)
+    profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE)
+    rating = models.IntegerField(default=0, null=False)
     creation_date = models.DateTimeField(auto_now_add=True)
+    correct = models.BooleanField(default = False)
 
     objects = AnswerManager()
 
-
 class TagManager(models.Manager):
     def get_popular(self):
-        return self.order_by('rating')
+        return self.order_by('-rating')
 
 class Tag(models.Model):
-    name = models.CharField(max_length=10)
-    rating = models.PositiveIntegerField()
-
+    name = models.CharField(max_length=10, unique=True)
+    rating = models.PositiveIntegerField(default=0, null=False)
     objects = TagManager()
-
     def __str__(self):
         return self.name
-
 
 class LikeManager(models.Manager):
     pass
 
 class Like(models.Model):
-    user_id = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()

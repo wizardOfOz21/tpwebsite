@@ -1,21 +1,15 @@
 {% extends 'main/base.html' %}
-
 {% load static %}
-
-{% block usrcard %}
-
-{% include 'main/include/nauser.html' %}
-
-{% endblock %}
 
 {% block content %}
 
 <div class="row">
     <div class="col-2 qcol">
         <div class="qavatar">
-            <img src="{% static 'main/img/avatar.png' %}" alt="">
+            <img src="{{ question.profile.avatar.url }}" alt="">
+            <p>{{question.profile}}</p>
         </div>
-        {% include 'main/include/likecounter.html' with rating=question.rating %}
+        {% include 'main/include/like_counter.html' with rating=question.rating type='q' id=question.id %}
     </div>
     <div class="col-10 qcol">
         <h2>{{question.title}}</h2>
@@ -25,28 +19,47 @@
             <div class="row" style="padding-top: 0.5rem;">
                 <div class="col">
                     <label>Tags:</label>
-                    {% for t in question.tags %}
-                    <a href="{% url 'tag' t %}">{{t}}</a>
+                    {% for tag in question.tag.all %}
+                        <a href="{% url 'tag' tag %}">{{tag}}</a>
                     {% endfor %}
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
-<hr>
+<hr id="ablock_start">
 
-{% include 'main/include/ablock.html' %}
+{% include 'main/include/ablock.html' with anchor='ablock_start' show_correct=show_correct %}
 
-<hr>
+<hr id="ablock_end">
 
-<div style="margin: 2rem 2rem 2rem 0; height: 15rem;">
-    <textarea class="form-control black_rounded_border" style="resize: none; height: 100%; width: 100%;"
-        maxlength="20000" placeholder="Enter answer here"></textarea>
-</div>
+<form novalidate action="/question/{{question.id}}#ablock_end" method="post">
+    {% csrf_token %}
+    {% for error in form.non_field_errors %}
+    <div>
+        <label class="my-2" style="color: red;">{{ error }}</label>
+    </div>
+    {% endfor %}
+    {% for field in form %}
+    <div class="text_area_container" style="margin: 2rem 2rem 2rem 0; height: 15rem;" >
+        {{ field }}
+    </div>
+    {% for error in field.errors %}
+    <div>
+        <label class="my-2" style="color: red;">{{ error }}</label>
+    </div>
+    {% endfor %}
+    {% endfor %}
 
-<input class="btn btn-primary" type="button" value="Answer">
+    <input class="btn btn-primary" type="submit" value="Ask!">
+</form>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{% static "main/js/jquery-3.7.0.min.js" %}"></script>
+<script src="{% static "main/js/main.js" %}"></script>
 
 {% endblock %}
