@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -76,11 +76,12 @@ WSGI_APPLICATION = 'askme.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '/home/johndoe/progs/mysql.cnf',
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -116,13 +117,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_ROOT= BASE_DIR / 'static'
+STATIC_URL = ''
+MEDIA_ROOT= BASE_DIR / 'media'
+MEDIA_URL = 'media/'
+# STATIC_URL = '/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+# if DEBUG:
+#     STATICFILES_DIRS = [
+#         BASE_DIR / "static",
+#     ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+APPEND_SLASH = True
+
+LOGIN_URL = '/login'
