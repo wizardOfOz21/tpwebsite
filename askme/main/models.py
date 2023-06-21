@@ -12,7 +12,7 @@ class ProfileManager(models.Manager):
 class Profile(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(null=False, blank=True, upload_to='avatars/%Y/%m/%d/', default='avatars/default_avatar.png')
+    avatar = models.ImageField(null=False, blank=True, upload_to='avatars/%Y/%m/%d/', default='avatars/default_avatar.jpeg')
     rating = models.DecimalField(max_digits=6, decimal_places=2, default=0, null=False)
 
     objects = ProfileManager()
